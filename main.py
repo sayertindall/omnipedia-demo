@@ -2,78 +2,71 @@ import os
 import logging
 import json
 import asyncio
-import re
-import aiofiles
-import wikitextparser as wtp
+import aiofiles 
+import wikitextparser as wtp  
 from typing import List, Dict, Any, Type, TypeVar
-from pydantic import BaseModel, Field
-from pydantic_settings import BaseSettings
-import networkx as nx
-import instructor
-import openai
-import mistletoe
-from mistletoe.ast_renderer import ASTRenderer
+from pydantic import BaseModel, Field  
+from pydantic_settings import BaseSettings  
+import instructor  
+import openai  
+import mistletoe  
+from mistletoe.ast_renderer import ASTRenderer 
 
 # Settings configuration
-current_dir = os.getcwd()
+current_dir = os.getcwd()  # Get the current working directory
 
 class Settings(BaseSettings):
-    DEFAULT_MODEL_IDENTIFIER: str = "gpt-3.5-turbo"
-    MAX_TOKENS: int = 1000
-    STYLE_GUIDE_PATH: str = Field(default=os.path.join(current_dir, "styleguide.txt"))
-    ARTICLE_PATH: str = Field(default=os.path.join(current_dir, "article.md"))
-    LOG_LEVEL: str = "INFO"
-    OPENAI_API_KEY: str = Field(default="", env="OPENAI_API_KEY")
-    MOCK_EXTERNAL_CALLS: bool = Field(default=False)
+    """
+    Application settings loaded from environment variables or default values.
+    """
+    DEFAULT_MODEL_IDENTIFIER: str = "gpt-3.5-turbo"  # Default language model identifier
+    MAX_TOKENS: int = 1000  # Maximum number of tokens for language model responses
+    STYLE_GUIDE_PATH: str = Field(default=os.path.join(current_dir, "styleguide.txt"))  # Path to the style guide file
+    ARTICLE_PATH: str = Field(default=os.path.join(current_dir, "article.md"))  # Path to the article file
+    LOG_LEVEL: str = "INFO"  # Logging level
+    OPENAI_API_KEY: str = Field(default="", env="OPENAI_API_KEY")  # OpenAI API key from environment variable
 
     class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+        env_file = ".env"  # File to load environment variables from
+        env_file_encoding = "utf-8"  # Encoding of the .env file
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.MOCK_EXTERNAL_CALLS = False
+settings = Settings()  # Instantiate settings with values from the environment or defaults
 
-settings = Settings()
-
-# Set the OpenAI API key as an environment variable
+# Set the OpenAI API key as an environment variable for the OpenAI client
 os.environ["OPENAI_API_KEY"] = settings.OPENAI_API_KEY
 
-# Constants
-ROOT_NODE_ID = 'root'
-UNKNOWN_CATEGORY = 'Unknown'
-
-# Exception classes
+# Exception classes for custom error handling
 class OmnipediaError(Exception):
-    """Base exception for Omnipedia"""
+    """Base exception for Omnipedia."""
+    pass
 
 class StyleGuideProcessingError(OmnipediaError):
-    """Raised when there's an error processing the style guide"""
+    """Raised when there's an error processing the style guide."""
+    pass
 
 class ArticleParsingError(OmnipediaError):
-    """Raised when there's an error parsing an article"""
+    """Raised when there's an error parsing an article."""
+    pass
 
 class EvaluationError(OmnipediaError):
-    """Raised when there's an error during the evaluation process"""
+    """Raised when there's an error during the evaluation process."""
+    pass
 
 class LanguageModelError(OmnipediaError):
-    """Raised when there's an error with the language model"""
+    """Raised when there's an error with the language model."""
+    pass
 
-# Data models
+# Data models using Pydantic for validation
 class Requirement(BaseModel):
     """
     Represents a requirement extracted from the style guide.
-
-    Attributes:
-        name (str): The name of the requirement.
-        description (str): A detailed description of the requirement.
-        applicable_sections (List[str]): A list of article sections where this requirement applies.
     """
-    name: str
-    description: str
-    applicable_sections: List[str]
+    name: str  # Name of the requirement
+    description: str  # Description of the requirement
+    applicable_sections: List[str]  # Sections of the article where this requirement applies
 
     def to_dict(self):
+        """Convert the Requirement instance to a dictionary."""
         return {
             "name": self.name,
             "description": self.description,
@@ -82,89 +75,62 @@ class Requirement(BaseModel):
 
 class StyleGuide(BaseModel):
     """
-    Represents the processed style guide.
-
-    Attributes:
-        requirements (List[Requirement]): A list of requirements extracted from the style guide.
+    Represents the style guide containing a list of requirements.
     """
     requirements: List[Requirement]
 
 class ArticleNode(BaseModel):
-    id: str
-    title: str
-    content: str
-    level: int = 0
-    children: List['ArticleNode'] = Field(default_factory=list)
-
+    """
+    Represents a node in the article structure (e.g., a section).
+    """
+    id: str  # Unique identifier for the node
+    title: str  # Title of the section
+    content: str  # Content of the section
+    level: int = 0  # Heading level (e.g., 1 for H1)
+    children: List['ArticleNode'] = Field(default_factory=list)  # Child sections
 
 class EvaluatedSection(BaseModel):
     """
-    Represents an evaluated section of an article.
-
-    Attributes:
-        section (str): The identifier of the evaluated section.
-        score (float): The evaluation score for the section.
-        feedback (str): Feedback on the section's adherence to style guidelines.
-        adherent_requirements (List[str]): Requirements that the section adheres to.
-        templates (List[str]): Templates used in the section.
-        wikilinks (List[str]): Wiki links found in the section.
-        external_links (List[str]): External links found in the section.
-        list_items (List[str]): List items found in the section.
+    Represents the evaluation result of a section.
     """
-    section: str
-    score: float
-    feedback: str
-    adherent_requirements: List[str]
-    templates: List[str] = Field(default_factory=list)
-    wikilinks: List[str] = Field(default_factory=list)
-    external_links: List[str] = Field(default_factory=list)
-    list_items: List[str] = Field(default_factory=list)
-
-class EvaluatedArticle(BaseModel):
-    """
-    Represents the evaluated article containing evaluated sections.
-
-    Attributes:
-        evaluated_sections (List[EvaluatedSection]): A list of evaluated sections.
-    """
-    evaluated_sections: List[EvaluatedSection]
+    section: str  # Section identifier or title
+    score: float  # Score from 0 to 1 indicating adherence to the style guide
+    feedback: str  # Feedback on the section
+    adherent_requirements: List[str]  # List of requirements the section adheres to
+    templates: List[str] = Field(default_factory=list)  # Templates used in the section
+    wikilinks: List[str] = Field(default_factory=list)  # Internal wiki links
+    external_links: List[str] = Field(default_factory=list)  # External links
+    list_items: List[str] = Field(default_factory=list)  # List items in the section
 
 # Initialize logging
-logging.basicConfig(level=settings.LOG_LEVEL, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=settings.LOG_LEVEL,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)  # Logger for this module
 
-# Utility classes
-class ArticleGraph:
-    def __init__(self):
-        self.graph = nx.DiGraph()
-        self.node_id_to_index = {}
-        self.current_index = 0
-
-    def add_node(self, node_id: str, content: str, category: str):
-        self.graph.add_node(node_id, data=ArticleNode(location=node_id, content=content, category=category))
-        self.node_id_to_index[node_id] = self.current_index
-        self.current_index += 1
-
-    def add_edge(self, parent_id: str, child_id: str):
-        self.graph.add_edge(parent_id, child_id)
-
-    def get_node(self, node_id: str) -> ArticleNode:
-        return self.graph.nodes[node_id]['data']
-
-    def get_children(self, node_id: str):
-        return list(self.graph.successors(node_id))
-
-    def get_node_index(self, node_id: str) -> int:
-        return self.node_id_to_index[node_id]
-
-
+# Type variable for language model responses
 T = TypeVar('T', bound=BaseModel)
+
 class LanguageModel:
+    """
+    Interface for interacting with the language model.
+    """
     def __init__(self, model_identifier: str = settings.DEFAULT_MODEL_IDENTIFIER):
-        self.model_identifier = model_identifier
-        self.client = instructor.from_openai(openai.AsyncOpenAI())
+        self.model_identifier = model_identifier  # Model to use
+        self.client = instructor.from_openai(openai.AsyncOpenAI())  # Initialize the OpenAI client
 
     async def prompt(self, text: str, response_model: Type[T]) -> T:
+        """
+        Send a prompt to the language model and parse the response into the specified model.
+
+        Args:
+            text (str): The prompt text.
+            response_model (Type[T]): The Pydantic model to parse the response into.
+
+        Returns:
+            T: An instance of the response model containing the parsed response.
+        """
         try:
             response = await self.client.chat.completions.create(
                 model=self.model_identifier,
@@ -176,40 +142,62 @@ class LanguageModel:
         except Exception as e:
             logger.error(f"Language model API error: {e}", exc_info=True)
             raise LanguageModelError(f"Failed to get response from language model: {str(e)}")
-# Parsers
+
+# Parsers for the style guide and article
 class StyleGuideProcessor:
-    def __init__(self, style_guide_path: str, llm: 'LanguageModel', requirements_json_path: str = "requirements.json"):
-        self.style_guide_path = style_guide_path
-        self.llm = llm
-        self.requirements_json_path = requirements_json_path
+    """
+    Processes the style guide to extract requirements.
+    """
+    def __init__(
+        self,
+        style_guide_path: str,
+        llm: 'LanguageModel',
+        requirements_json_path: str = "requirements.json"
+    ):
+        self.style_guide_path = style_guide_path  # Path to the style guide
+        self.llm = llm  # Language model instance
+        self.requirements_json_path = requirements_json_path  # Path to save/load requirements
 
     async def process(self) -> StyleGuide:
+        """
+        Process the style guide to extract requirements.
+
+        Returns:
+            StyleGuide: An instance containing the extracted requirements.
+        """
         try:
-            # First, try to load requirements from JSON
+            # Try to load existing requirements from JSON
             requirements = await self._load_requirements_from_json()
-            
             if requirements:
                 logger.info("Requirements loaded from JSON file.")
                 return StyleGuide(requirements=requirements)
-            
-            # If no JSON file or it's empty, process the style guide
+
             logger.info("Processing style guide to extract requirements.")
+            # Read the style guide file asynchronously
             async with aiofiles.open(self.style_guide_path, 'r') as file:
                 guide_text = await file.read()
-            
+
+            # Parse the style guide using wikitextparser
             parsed_guide = wtp.parse(guide_text)
+            # Extract sections from the parsed guide
             sections = self._extract_sections(parsed_guide)
+            # Extract requirements from the sections using the language model
             requirements = await self._extract_requirements(sections)
-            
-            # Save the extracted requirements to JSON for future use
+            # Save the requirements to JSON for future use
             await self._save_requirements_to_json(requirements)
-            
+
             return StyleGuide(requirements=requirements)
         except Exception as e:
             logger.error(f"Error processing style guide: {e}", exc_info=True)
             raise StyleGuideProcessingError(f"Failed to process style guide: {str(e)}")
 
     async def _load_requirements_from_json(self) -> List[Requirement]:
+        """
+        Load requirements from a JSON file if it exists.
+
+        Returns:
+            List[Requirement]: A list of requirements.
+        """
         try:
             if os.path.exists(self.requirements_json_path):
                 async with aiofiles.open(self.requirements_json_path, 'r') as f:
@@ -221,6 +209,12 @@ class StyleGuideProcessor:
             return []
 
     async def _save_requirements_to_json(self, requirements: List[Requirement]):
+        """
+        Save requirements to a JSON file.
+
+        Args:
+            requirements (List[Requirement]): The requirements to save.
+        """
         try:
             requirements_data = [req.to_dict() for req in requirements]
             async with aiofiles.open(self.requirements_json_path, 'w') as f:
@@ -230,6 +224,15 @@ class StyleGuideProcessor:
             logger.error(f"Error saving requirements to JSON: {e}", exc_info=True)
 
     def _extract_sections(self, parsed_guide: wtp.WikiText) -> List[dict]:
+        """
+        Extract sections from the parsed style guide.
+
+        Args:
+            parsed_guide (wtp.WikiText): The parsed style guide.
+
+        Returns:
+            List[dict]: A list of sections with titles and content.
+        """
         sections = []
         for section in parsed_guide.sections:
             if section.title:
@@ -240,6 +243,15 @@ class StyleGuideProcessor:
         return sections
 
     async def _extract_requirements(self, sections: List[dict]) -> List[Requirement]:
+        """
+        Extract requirements from the style guide sections.
+
+        Args:
+            sections (List[dict]): The sections to process.
+
+        Returns:
+            List[Requirement]: A list of extracted requirements.
+        """
         all_requirements = []
         standardized_sections = [
             "Lead",
@@ -274,77 +286,59 @@ class StyleGuideProcessor:
             Return the results as a list of Requirement objects.
             """
             try:
+                # Use the language model to extract requirements from the section
                 response = await self.llm.prompt(prompt, List[Requirement])
                 all_requirements.extend(response)
             except Exception as e:
                 logger.error(f"Error processing section {section['title']}: {e}")
+                # Append an error requirement to indicate the failure
                 all_requirements.append(Requirement(
                     name=f"Error in section: {section['title']}",
                     description=f"Failed to process this section: {str(e)}",
                     applicable_sections=[],
                 ))
-
         logger.info(f"Extracted {len(all_requirements)} requirements")
         return all_requirements
 
-    
-    async def _summarize_sections(self, sections: List[dict]) -> List[dict]:
-        summarized_sections = []
-        for section in sections:
-            summary_prompt = f""" 
-            Here are your instructions:
-
-            1. Carefully read and analyze the text provided.
-            2. Identify key guidelines, rules, or recommendations in the Style Guide (text provided).
-            3. For each guideline you identify:
-            a. Create a new JSON object.
-            b. Include a "name" field that succinctly describes the guideline.
-            c. Include a "description" field that explains the guideline in more detail.
-            d. Include a "location" field that lists where this guideline applies.
-            4. Present your findings as a list of these JSON objects.
-
-            Remember to focus on substantial guidelines or rules, not minor details. Your goal is to make a comprehensive list of requirements that a writer should follow.
-
-            {section["content"]}
-
-            Begin your analysis now.
-            """
-            try:
-                response = await self.llm.prompt(summary_prompt, List[Requirement])
-                summarized_sections.append({
-                    "title": section["title"],
-                    "content": [req.dict() for req in response]
-                })
-            except Exception as e:
-                logger.error(f"Error summarizing section {section['title']}: {e}")
-                summarized_sections.append({
-                    "title": section["title"],
-                    "content": [{"name": "Error", "description": f"Failed to summarize: {str(e)}", "applicable_sections": []}]
-                })
-
-        async with aiofiles.open("summarized.json", 'w') as f:
-            await f.write(json.dumps(summarized_sections, indent=2))
-        
-        return summarized_sections
-
 class ArticleParser:
+    """
+    Parses the article markdown file into an ArticleNode structure.
+    """
     def __init__(self):
-        self.ast_renderer = ASTRenderer()
-        self.current_id = 0
+        self.ast_renderer = ASTRenderer()  # Renderer to convert markdown to AST
+        self.current_id = 0  # Counter for unique section IDs
 
     def parse(self, filename):
+        """
+        Parse the markdown article file.
+
+        Args:
+            filename (str): The path to the markdown file.
+
+        Returns:
+            ArticleNode: The root node of the parsed article.
+        """
         with open(filename, 'r', encoding='utf-8') as file:
             content = file.read()
 
-        # Parse Markdown to AST using mistletoe
+        # Render the markdown content to an AST
         ast_json = self.ast_renderer.render(mistletoe.Document(content))
-
-        # Parse the JSON string into a Python object
         ast = json.loads(ast_json)
 
+        # Process the AST to build the article structure
         return self._process_ast(ast)
 
     def _process_ast(self, ast: Dict[str, Any]) -> ArticleNode:
+        """
+        Process the AST recursively to build the article structure.
+
+        Args:
+            ast (Dict[str, Any]): The AST of the article.
+
+        Returns:
+            ArticleNode: The root node of the article.
+        """
+        # Initialize the root node
         root = ArticleNode(id="root", title="Overall Title", content="", level=0)
         if 'children' in ast:
             self._process_children(ast['children'], root)
@@ -353,28 +347,48 @@ class ArticleParser:
         return root
 
     def _process_children(self, children, root: ArticleNode):
-        section_stack = [root]
+        """
+        Process child nodes of the AST.
+
+        Args:
+            children (List[Dict[str, Any]]): The child nodes.
+            root (ArticleNode): The current parent node.
+        """
+        section_stack = [root]  # Stack to keep track of section hierarchy
 
         for item in children:
             item_type = item.get('type')
             if item_type == 'Heading':
+                # Process heading to create a new section
                 heading_level = item.get('level', 1)
                 new_section = self._create_section(item, heading_level)
 
-                # Adjust the stack based on heading level
+                # Adjust the section stack based on heading levels
                 while section_stack and section_stack[-1].level >= heading_level:
                     section_stack.pop()
                 section_stack[-1].children.append(new_section)
                 section_stack.append(new_section)
             elif item_type in ['Paragraph', 'List']:
+                # Append content to the current section
                 current_section = section_stack[-1]
                 current_section.content += self._extract_content(item)
             elif item.get('children'):
+                # Recursively process child nodes
                 self._process_children(item['children'], root=section_stack[-1])
 
     def _create_section(self, heading: Dict[str, Any], level: int) -> ArticleNode:
-        self.current_id += 1
-        title = self._extract_text(heading.get('children', []))
+        """
+        Create a new article section node from a heading.
+
+        Args:
+            heading (Dict[str, Any]): The heading node.
+            level (int): The heading level.
+
+        Returns:
+            ArticleNode: The new section node.
+        """
+        self.current_id += 1  # Increment the section ID counter
+        title = self._extract_text(heading.get('children', []))  # Extract the heading text
         return ArticleNode(
             id=f"section_{self.current_id}",
             title=title,
@@ -383,6 +397,15 @@ class ArticleParser:
         )
 
     def _extract_content(self, node: Dict[str, Any]) -> str:
+        """
+        Extract content from a paragraph or list node.
+
+        Args:
+            node (Dict[str, Any]): The node to extract content from.
+
+        Returns:
+            str: The extracted content.
+        """
         if node['type'] == 'Paragraph':
             return self._extract_text(node.get('children', [])) + "\n\n"
         elif node['type'] == 'List':
@@ -390,6 +413,15 @@ class ArticleParser:
         return ""
 
     def _extract_text(self, children) -> str:
+        """
+        Recursively extract text from child nodes.
+
+        Args:
+            children (List[Dict[str, Any]]): The child nodes.
+
+        Returns:
+            str: The extracted text.
+        """
         texts = []
         for child in children:
             if child['type'] == 'RawText':
@@ -399,6 +431,15 @@ class ArticleParser:
         return ' '.join(texts)
 
     def _extract_list(self, node: Dict[str, Any]) -> str:
+        """
+        Extract content from a list node.
+
+        Args:
+            node (Dict[str, Any]): The list node.
+
+        Returns:
+            str: The extracted list content.
+        """
         list_items = []
         for item in node.get('children', []):
             item_text = self._extract_text(item.get('children', []))
@@ -406,7 +447,15 @@ class ArticleParser:
         return "\n".join(list_items)
 
     def serialize_article_structure(self, node: ArticleNode) -> dict:
-        """Serialize the ArticleNode structure to a dictionary."""
+        """
+        Serialize the article structure to a dictionary.
+
+        Args:
+            node (ArticleNode): The root node of the article.
+
+        Returns:
+            dict: The serialized article structure.
+        """
         return {
             "id": node.id,
             "title": node.title,
@@ -416,31 +465,60 @@ class ArticleParser:
         }
 
 class ArticleEvaluator:
+    """
+    Evaluates the article against the style guide requirements.
+    """
     def __init__(self, llm: LanguageModel, requirements: List[Requirement]):
-        self.llm = llm
-        self.requirements = requirements
+        self.llm = llm  # Language model instance
+        self.requirements = requirements  # List of style guide requirements
 
     async def evaluate(self, article_node: ArticleNode) -> List[EvaluatedSection]:
+        """
+        Evaluate the article sections.
+
+        Args:
+            article_node (ArticleNode): The root node of the article.
+
+        Returns:
+            List[EvaluatedSection]: The evaluation results.
+        """
         try:
+            # Prepare the sections for evaluation
             sections_to_evaluate = self._prepare_sections_for_evaluation(article_node)
-            print(sections_to_evaluate)
             evaluated_sections = []
             for section in sections_to_evaluate:
+                # Generate the prompt for the language model
                 prompt = self._generate_evaluation_prompt(section)
+                # Get the evaluation result from the language model
                 result = await self.llm.prompt(prompt, EvaluatedSection)
                 evaluated_sections.append(result)
-
             return evaluated_sections
         except Exception as e:
             logger.error(f"Error evaluating article: {e}", exc_info=True)
             raise EvaluationError(f"Failed to evaluate article: {str(e)}")
 
     def _prepare_sections_for_evaluation(self, article_node: ArticleNode) -> List[Dict[str, Any]]:
+        """
+        Prepare the article sections for evaluation.
+
+        Args:
+            article_node (ArticleNode): The root node of the article.
+
+        Returns:
+            List[Dict[str, Any]]: A list of sections to evaluate.
+        """
         sections_to_evaluate = []
         self._collect_sections(article_node, sections_to_evaluate)
         return sections_to_evaluate
 
     def _collect_sections(self, node: ArticleNode, sections: List[Dict[str, Any]]):
+        """
+        Recursively collect sections from the article.
+
+        Args:
+            node (ArticleNode): The current node.
+            sections (List[Dict[str, Any]]): The list to collect sections into.
+        """
         sections.append({
             "section_id": node.id,
             "title": node.title,
@@ -450,7 +528,16 @@ class ArticleEvaluator:
             self._collect_sections(child, sections)
 
     def _generate_evaluation_prompt(self, section: Dict[str, Any]) -> str:
-        # Convert Requirement objects to dictionaries
+        """
+        Generate a prompt for evaluating a section.
+
+        Args:
+            section (Dict[str, Any]): The section to evaluate.
+
+        Returns:
+            str: The generated prompt.
+        """
+        # Prepare the requirements for inclusion in the prompt
         serializable_requirements = [
             {
                 "name": req.name,
@@ -459,7 +546,6 @@ class ArticleEvaluator:
             }
             for req in self.requirements
         ]
-
         return f"""
         Evaluate the following article section against the style guide requirements:
 
@@ -481,55 +567,77 @@ class ArticleEvaluator:
 
 # Main application class
 class Omnipedia:
-    def __init__(self, style_guide_path: str, language_model: LanguageModel, requirements_path: str):
-        self.llm = language_model
+    """
+    Main class for the Omnipedia application.
+    """
+    def __init__(
+        self,
+        style_guide_path: str,
+        language_model: LanguageModel,
+        requirements_path: str
+    ):
+        self.llm = language_model  # Language model instance
         self.style_guide_processor = StyleGuideProcessor(style_guide_path, language_model, requirements_path)
-        self.style_guide = None
-        self.evaluator = None
-        self.article_parser = ArticleParser()
+        self.style_guide = None  # To hold the processed style guide
+        self.evaluator = None  # To hold the article evaluator
+        self.article_parser = ArticleParser()  # Article parser instance
 
     async def initialize(self):
+        """
+        Initialize the application by processing the style guide.
+        """
         try:
+            # Process the style guide to extract requirements
             self.style_guide = await self.style_guide_processor.process()
+            # Initialize the evaluator with the extracted requirements
             self.evaluator = ArticleEvaluator(self.llm, self.style_guide.requirements)
         except Exception as e:
             logger.error(f"Error initializing Omnipedia: {e}", exc_info=True)
             raise
 
     async def evaluate_article(self, article_path: str):
+        """
+        Evaluate an article.
+
+        Args:
+            article_path (str): The path to the article file.
+
+        Returns:
+            List[EvaluatedSection]: The evaluation results.
+        """
         try:
+            # Parse the article to get the article structure
             article_node = self.article_parser.parse(article_path)
-            
-            # Serialize and save the article structure
+            # Serialize and save the article structure to a JSON file
             article_structure = self.article_parser.serialize_article_structure(article_node)
             with open("article_structure.json", 'w') as file:
                 json.dump(article_structure, file, indent=2)
             logger.info("Article structure saved to article_structure.json")
 
+            # Evaluate the article using the evaluator
             return await self.evaluator.evaluate(article_node)
         except Exception as e:
             logger.error(f"Error evaluating article: {e}", exc_info=True)
             raise
-    
-    async def save_requirements_to_json(self, filename: str):
-        try:
-            requirements_data = [req.dict() for req in self.style_guide.requirements]
-            async with aiofiles.open(filename, 'w') as f:
-                await f.write(json.dumps(requirements_data, indent=2))
-            logger.info(f"Requirements saved to {filename}")
-        except Exception as e:
-            logger.error(f"Error saving requirements to JSON: {e}", exc_info=True)
-            raise
-# Main function
-async def main():
-    try:
-        language_model = LanguageModel(settings.DEFAULT_MODEL_IDENTIFIER)
-        omnipedia = Omnipedia(settings.STYLE_GUIDE_PATH, language_model, "summarized.json")
 
+# Main function to run the application
+async def main():
+    """
+    Main entry point for the application.
+    """
+    try:
+        # Initialize the language model
+        language_model = LanguageModel(settings.DEFAULT_MODEL_IDENTIFIER)
+        # Create an instance of Omnipedia
+        omnipedia = Omnipedia(settings.STYLE_GUIDE_PATH, language_model, "requirements.json")
+
+        # Initialize the application (process the style guide)
         await omnipedia.initialize()
-        
+
+        # Evaluate the article specified in the settings
         evaluated_sections = await omnipedia.evaluate_article(settings.ARTICLE_PATH)
         print("Evaluation complete.")
+        # Print the evaluation results
         for section in evaluated_sections:
             print(f"Section: {section.section}")
             print(f"Score: {section.score}")
@@ -539,6 +647,7 @@ async def main():
     except Exception as e:
         logger.error(f"An error occurred in main: {e}", exc_info=True)
 
+# Run the main function if the script is executed directly
 if __name__ == "__main__":
     try:
         asyncio.run(main())

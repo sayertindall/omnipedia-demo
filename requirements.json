@@ -1,113 +1,134 @@
 [
   {
-    "name": "Focus on Study Content",
-    "description": "Do not hype a study by listing the names, credentials, institutions, or other 'qualifications' of their authors. Article prose should focus on what a cited study says about the gene or protein, not what the gene or protein says about a particular study or the research group who conducted the study.",
+    "name": "Avoid Hype in Study Descriptions",
+    "description": "Do not hype a study by listing the names, credentials, institutions, or other 'qualifications' of their authors. Focus on what a cited study says about the structure, function, clinical significance, etc. of the gene or protein.",
     "applicable_sections": [
       "All Sections"
     ]
   },
   {
-    "name": "Use UniProt protein name for relatively short articles",
-    "description": "The recommended UniProt protein name should be used as the article name for relatively short articles. If the protein name is verbose, either a widely used protein acronym or the official HUGO gene symbol, followed by '(gene)' if necessary to disambiguate.",
+    "name": "Use UniProt Protein Name as Article Name",
+    "description": "If the protein name is relatively short, use the recommended UniProt protein name as the article name.",
     "applicable_sections": [
-      "Article Name"
+      "All Sections"
     ]
   },
   {
-    "name": "Enumerate proteins in a family",
-    "description": "When naming proteins that can be grouped into a family based on homology or shared function, enumerate the different members with a dash '-' followed by an Arabic number (e.g., 'desmoglein-1', 'desmoglein-2', etc.)",
+    "name": "Use Protein Acronym or HUGO Gene Symbol for Verbose Protein Names",
+    "description": "If the protein name is verbose, use either a widely used protein acronym or the official HUGO gene symbol, followed by '(gene)' if necessary to disambiguate.",
     "applicable_sections": [
-      "Article Name"
+      "All Sections"
     ]
   },
   {
-    "name": "Include taxon for viral protein articles",
-    "description": "For articles about viral proteins, include the taxon in the title to avoid ambiguity. A parenthesized term added to disambiguate common symbols does not constitute unnecessary disambiguation even when it is the only article with such a name.",
+    "name": "Enumerate Proteins in a Family with a Dash and Arabic Number",
+    "description": "When naming proteins in a family based on homology or shared function, enumerate them with a dash '-' followed by an Arabic number (e.g., desmoglein-1, desmoglein-2, etc.)",
     "applicable_sections": [
-      "Article Name"
+      "All Sections"
     ]
   },
   {
-    "name": "Use Gene Abbreviations",
-    "description": "Use abbreviations of genes according to the HUGO Gene Nomenclature Committee guidelines. Abbreviations should be written in italic font style, and it is recommended to use abbreviations instead of the full name.",
+    "name": "Include Taxon in Article Title for Viral Proteins",
+    "description": "For articles about viral proteins, include the taxon in the title to avoid ambiguity. Adding a parenthesized term to disambiguate common symbols is acceptable even if it is the only article with that name.",
     "applicable_sections": [
-      "Gene nomenclature"
+      "All Sections"
     ]
   },
   {
-    "name": "Formatting of Gene Names",
-    "description": "Format human gene names in capitals (e.g., ALDOA, INS). For orthologs of human genes in other species, only capitalize the initial letter (e.g., mouse Aldoa, bovine Ins). Full gene names and abbreviations should be written in italic font style.",
+    "name": "Abbreviation Usage",
+    "description": "Abbreviations of genes should be used instead of the full name. Human gene names should be written in capitals, while orthologs of human genes in other species should only capitalize the initial letter.",
     "applicable_sections": [
-      "Gene nomenclature"
+      "Gene"
     ]
   },
   {
-    "name": "Recommended Usage of Gene Symbols",
-    "description": "Recommended usages include: 1. \"the ALDOA gene is regulated...\", 2. \"the rat gene for Aldoa is regulated...\", or 3. \"ALDOA is regulated...\". It is not recommended to write \"the gene 'ALDOA' is regulated\" as it is redundant.",
+    "name": "Gene Symbol Usage",
+    "description": "Gene symbols should be used in a specific format: 'the ALDOA gene is regulated...', 'the rat gene for Aldoa is regulated...', or ''ALDOA'' is regulated...'. Avoid using 'the gene ''ALDOA'' is regulated' as it is redundant.",
     "applicable_sections": [
-      "Gene nomenclature"
+      "Gene"
     ]
   },
   {
     "name": "Standard Format for Diagrams",
-    "description": "Diagrams should adhere to a standard format whenever possible. If the diagram guide does not provide adequate guidance on the style for images in an article, suggest expansions to standardized formatting.",
+    "description": "Diagrams should adhere to a standard format. If the diagram guide provided does not offer sufficient style guidance for images in an article, consider proposing expansions to the standardized formatting for diagrams.",
     "applicable_sections": [
-      "Images and diagrams"
+      "Images and Diagrams"
     ]
   },
   {
-    "name": "Inclusion of Infoboxes",
-    "description": "One or more of the specified infoboxes should be included at the top of each article as appropriate. The infobox choice depends on the type of content being discussed, such as genes/proteins, protein families, enzymes, or RNA families.",
+    "name": "Include Infoboxes at the Top",
+    "description": "One or more relevant infoboxes should be included at the top of each article. Infoboxes provide key information and aid in structuring the content of the article.",
     "applicable_sections": [
-      "Infoboxes"
+      "Lead",
+      "Gene",
+      "Protein",
+      "Structure",
+      "Species",
+      "Tissue",
+      "Subcellular Distribution",
+      "Function",
+      "Interactions",
+      "Clinical Significance",
+      "History/Discovery",
+      "References",
+      "Images and Diagrams",
+      "Navigation Box",
+      "Categories",
+      "All Sections"
     ]
   },
   {
     "name": "Lead Section Definition",
-    "description": "The lead section should be placed before the first headline and should define the scope of the article. The first sentence should follow a specific format for genes/proteins with human orthologs.",
+    "description": "The lead section must be the section before the first headline. The first sentence of the lead should define the scope of the article.",
     "applicable_sections": [
       "Lead"
     ]
   },
   {
-    "name": "Avoid Repeating Basic Information",
-    "description": "Avoid repeating basic gene and protein information in the Gene and Protein sections if it is already present in the infobox, unless the information is especially notable.",
+    "name": "Avoid Repetition of Basic Gene Information",
+    "description": "Specific information about the gene, such as its location on the chromosome and regulation, should not be unnecessarily repeated if already included in the infobox. Include only notable information in this section.",
     "applicable_sections": [
-      "Gene",
+      "Gene"
+    ]
+  },
+  {
+    "name": "Avoid Repetition of Basic Protein Information",
+    "description": "Specific information about the protein, such as splice variants and post-translational modifications, should not be unnecessarily repeated if already included in the infobox. Include only notable information in this section.",
+    "applicable_sections": [
       "Protein"
     ]
   },
   {
     "name": "Species, Tissue, and Subcellular Distribution Description",
-    "description": "Optional section detailing the expression of the gene in different species, tissues, and subcellular compartments or organelles.",
+    "description": "Optional section that concisely describes the species where the gene is expressed, the tissues where the protein is expressed, and the subcellular compartments or organelles where the protein is found.",
     "applicable_sections": [
-      "Species, tissue, and subcellular distribution"
+      "Species, Tissue, and Subcellular Distribution"
     ]
   },
   {
     "name": "Function Description",
-    "description": "Describe the function of the transcribed protein in the Function section.",
+    "description": "Describe the function of the transcribed protein in this section.",
     "applicable_sections": [
       "Function"
     ]
   },
   {
     "name": "Interactions Listing",
-    "description": "Optional section to list proteins that interact with the protein in the article.",
+    "description": "Optional section listing proteins that interact with the protein subject of the article.",
     "applicable_sections": [
       "Interactions"
     ]
   },
   {
     "name": "Clinical Significance Listing",
-    "description": "List diseases or conditions resulting from gene mutations or protein deficiencies/excesses in the Clinical Significance section.",
+    "description": "List diseases or conditions resulting from gene mutations or protein deficiencies/excesses in this section.",
     "applicable_sections": [
-      "Clinical significance"
+      "Clinical Significance"
     ]
   },
   {
     "name": "History/Discovery Information",
-    "description": "Include key discoveries regarding the gene or protein, avoiding direct mention of research groups or institutions. List names of individuals involved in significant discoveries in this section.",
+    "description": "Include names of individuals or groups who made key discoveries about the gene or protein. Avoid directly mentioning research groups or institutions.",
     "applicable_sections": [
       "History/Discovery"
     ]
@@ -116,61 +137,56 @@
     "name": "Link Wikipedia Article to Wikidata Item",
     "description": "The Wikipedia article should be linked to a Wikidata item of the entity first mentioned in the first sentence of the lead section.",
     "applicable_sections": [
-      "Lead Section"
+      "Lead"
     ]
   },
   {
-    "name": "Use Inline Citations",
-    "description": "Articles should be dense with inline citations using either footnotes or parenthetical citations. Avoid writing substantial amounts of prose without citing sources directly within the text to maintain clear attribution of information.",
+    "name": "Use Reliable Sources",
+    "description": "Provide guidance on choosing and using reliable sources like Wikipedia's identified reliable sources in natural and physical sciences, and avoid using non-specific or general references in the 'References' section.",
     "applicable_sections": [
-      "Citing sources"
+      "All Sections"
     ]
   },
   {
     "name": "Consistent Citation Formatting",
-    "description": "While there is no standard format for citations on Wikipedia, citations within an article should be formatted consistently. Editors can choose to format citations by hand or use citation templates to ensure uniformity within the same article.",
+    "description": "Maintain consistency in citation formatting within each article, whether done manually or by using citation templates like Cite journal, Cite book, Cite web, Cite press release, and Cite news.",
     "applicable_sections": [
-      "Citing sources"
+      "All Sections"
     ]
   },
   {
-    "name": "Include Hyperlinks in Citations",
-    "description": "It is useful to include hyperlinks in citations to enhance the reader's experience. Add links to journal abstracts on PubMed, digital object identifiers (DOIs), URLs to freely available full text, and other relevant online sources when appropriate.",
+    "name": "Population of Citation Templates",
+    "description": "Utilize tools like Diberri's template-filling web site or the Universal reference formatter to populate journal and book citation templates efficiently by entering relevant identifiers such as PMID or ISBN.",
     "applicable_sections": [
-      "Citing sources"
+      "All Sections"
+    ]
+  },
+  {
+    "name": "Hyperlinking in Citations",
+    "description": "Include hyperlinks in citations where applicable, such as linking to PubMed for journal abstracts, using DOI templates, providing URLs for freely available full-text articles, and preferring HTML links over PDF for wider compatibility.",
+    "applicable_sections": [
+      "All Sections"
     ]
   },
   {
     "name": "Include Navigation Boxes for Related Proteins",
-    "description": "Articles about related proteins should be cross-linked by including one or more navigation boxes like Cytoskeletal Proteins, Ion channels, Transcription factors, and Transmembrane receptors.",
+    "description": "Articles about related proteins should include one or more navigation boxes like Cytoskeletal Proteins, Ion channels, Transcription factors, and Transmembrane receptors to facilitate cross-linking.",
     "applicable_sections": [
-      "All Sections"
+      "All Sections",
+      "Navigation Box"
     ]
   },
   {
-    "name": "Assign to at least one category",
-    "description": "Every Wikipedia article should be added to at least one category for better organization and discoverability. Categories or subcategories that may be appropriate for gene and protein articles include specific categories like Proteins, Enzymes by function, and Genes by human chromosome.",
+    "name": "Categorization Rule",
+    "description": "Every Wikipedia article should be added to at least one category. Categories or subcategories that may be appropriate for gene and protein articles include: Proteins, Enzymes by function, Genes by human chromosome.",
     "applicable_sections": [
-      "All article sections"
+      "All Sections",
+      "Categories"
     ]
   },
   {
-    "name": "Use Clear and Concise Language",
-    "description": "Use clear and concise language to ensure that the content is easily understandable by readers. Avoid unnecessary jargon or complex terminology that may confuse the audience.",
-    "applicable_sections": [
-      "All Sections"
-    ]
-  },
-  {
-    "name": "Avoid Ambiguous Statements",
-    "description": "Avoid ambiguous statements that could lead to confusion. Ensure that the content is specific and precise, leaving no room for misinterpretation.",
-    "applicable_sections": [
-      "All Sections"
-    ]
-  },
-  {
-    "name": "Maintain Consistent Tone",
-    "description": "Maintain a consistent tone throughout the article to establish a coherent and engaging reading experience. Avoid sudden shifts in writing style that may disrupt the flow of the content.",
+    "name": "Use of Notes Section",
+    "description": "Include a section titled 'Notes' to provide additional information or clarifications within the article.",
     "applicable_sections": [
       "All Sections"
     ]
