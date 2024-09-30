@@ -1,0 +1,284 @@
+[
+  {
+    "name": "Avoid Hype in Author Attribution",
+    "description": "Do not hype a study by listing the names, credentials, institutions, or other 'qualifications' of their authors. Focus on the content of the study and its relevance to the gene or protein. Notable contributions can be mentioned in the discovery/history section.",
+    "applicable_sections": [
+      "All Sections",
+      "History/Discovery"
+    ]
+  },
+  {
+    "name": "Use UniProt Protein Name for Short Articles",
+    "description": "For relatively short articles, use the recommended UniProt protein name as the article name.",
+    "applicable_sections": [
+      "Lead",
+      "Gene",
+      "Protein",
+      "Structure",
+      "Species",
+      "Tissue",
+      "Subcellular Distribution",
+      "Function",
+      "Interactions",
+      "Clinical Significance",
+      "History/Discovery",
+      "References",
+      "Images and Diagrams",
+      "Navigation Box",
+      "Categories",
+      "All Sections"
+    ]
+  },
+  {
+    "name": "Use Protein Acronym or HUGO Gene Symbol for Verbose Names",
+    "description": "If the protein name is verbose, use either a widely used protein acronym or the official HUGO gene symbol followed by \"(gene)\" if needed for disambiguation.",
+    "applicable_sections": [
+      "Lead",
+      "Gene",
+      "Protein",
+      "Structure",
+      "Species",
+      "Tissue",
+      "Subcellular Distribution",
+      "Function",
+      "Interactions",
+      "Clinical Significance",
+      "History/Discovery",
+      "References",
+      "Images and Diagrams",
+      "Navigation Box",
+      "Categories",
+      "All Sections"
+    ]
+  },
+  {
+    "name": "Enumerate Proteins in a Family with a Dash and Arabic Number",
+    "description": "When naming proteins grouped into a family based on homology or shared function, enumerate the different members with a dash \"-\" followed by an Arabic number (e.g., desmoglein-1, desmoglein-2, etc.).",
+    "applicable_sections": [
+      "Lead",
+      "Gene",
+      "Protein",
+      "Structure",
+      "Species",
+      "Tissue",
+      "Subcellular Distribution",
+      "Function",
+      "Interactions",
+      "Clinical Significance",
+      "History/Discovery",
+      "References",
+      "Images and Diagrams",
+      "Navigation Box",
+      "Categories",
+      "All Sections"
+    ]
+  },
+  {
+    "name": "Include Taxon for Viral Protein Articles",
+    "description": "For articles about viral proteins, include the taxon in the title to avoid ambiguity. A parenthesized term added for disambiguation does not constitute unnecessary disambiguation.",
+    "applicable_sections": [
+      "Lead",
+      "Gene",
+      "Protein",
+      "Structure",
+      "Species",
+      "Tissue",
+      "Subcellular Distribution",
+      "Function",
+      "Interactions",
+      "Clinical Significance",
+      "History/Discovery",
+      "References",
+      "Images and Diagrams",
+      "Navigation Box",
+      "Categories",
+      "All Sections"
+    ]
+  },
+  {
+    "name": "Use Abbreviations for Gene Names",
+    "description": "Abbreviations of genes should be used according to the HUGO Gene Nomenclature Committee guidelines. Gene symbols should be written in italics, with full names also in italics. Abbreviations should be preferred over full names.",
+    "applicable_sections": [
+      "Gene",
+      "All Sections"
+    ]
+  },
+  {
+    "name": "Capitalization of Gene Names",
+    "description": "Human gene names should be written in all capitals (e.g., ALDOA, INS). For orthologs of human genes in other species, only the initial letter should be capitalized (e.g., mouse Aldoa, bovine Ins).",
+    "applicable_sections": [
+      "Gene",
+      "All Sections"
+    ]
+  },
+  {
+    "name": "Recommended Usage of Gene Symbols",
+    "description": "Recommended usages include: \"the ALDOA gene is regulated...\", \"the rat gene for Aldoa is regulated...\", \"ALDOA is regulated...\". It is not recommended to say \"the gene ALDOA is regulated\" as it is redundant.",
+    "applicable_sections": [
+      "Gene",
+      "All Sections"
+    ]
+  },
+  {
+    "name": "Standard Format for Diagrams",
+    "description": "Diagrams should adhere to a standard format. If the diagram guide lacks clear instructions on image style, consider proposing modifications to conform to standardized formatting guidelines.",
+    "applicable_sections": [
+      "Images and Diagrams"
+    ]
+  },
+  {
+    "name": "Include Relevant Infoboxes",
+    "description": "One or more of the specified infobox templates should be included at the top of each article based on the content being discussed.",
+    "applicable_sections": [
+      "Lead",
+      "Gene",
+      "Protein",
+      "Structure",
+      "Species",
+      "Tissue",
+      "Subcellular Distribution",
+      "Function",
+      "Interactions",
+      "Clinical Significance",
+      "History/Discovery",
+      "References",
+      "Images and Diagrams",
+      "Navigation Box",
+      "Categories",
+      "All Sections"
+    ]
+  },
+  {
+    "name": "Consider Additional Infoboxes for Exceptions",
+    "description": "Consider adding additional infoboxes like enzyme or protein family infoboxes in specific cases where one human paralog is assigned to a particular EC number or Pfam family.",
+    "applicable_sections": [
+      "Lead",
+      "Protein",
+      "Structure",
+      "Function",
+      "Interactions",
+      "Clinical Significance",
+      "All Sections"
+    ]
+  },
+  {
+    "name": "Define Scope in Lead Section",
+    "description": "The first sentence of the lead section should clearly define the scope of the article.",
+    "applicable_sections": [
+      "Lead"
+    ]
+  },
+  {
+    "name": "Avoid Redundancy in Gene Section",
+    "description": "Do not repeat basic gene information that is already present in the infobox unless it is especially notable.",
+    "applicable_sections": [
+      "Gene"
+    ]
+  },
+  {
+    "name": "Avoid Redundancy in Protein Section",
+    "description": "Do not repeat basic protein information that is already present in the infobox unless it is especially notable.",
+    "applicable_sections": [
+      "Protein"
+    ]
+  },
+  {
+    "name": "Concisely Describe Species, Tissue, and Subcellular Distribution",
+    "description": "Provide concise information about the species where the gene is expressed, the tissues where the protein is expressed, and the subcellular compartments/organelles where the protein is found.",
+    "applicable_sections": [
+      "Species, Tissue, and Subcellular Distribution"
+    ]
+  },
+  {
+    "name": "Describe Protein Function",
+    "description": "Clearly describe the function of the transcribed protein.",
+    "applicable_sections": [
+      "Function"
+    ]
+  },
+  {
+    "name": "List Interactions in Interactions Section",
+    "description": "List proteins that the subject protein interacts with in the Interactions section.",
+    "applicable_sections": [
+      "Interactions"
+    ]
+  },
+  {
+    "name": "Highlight Clinical Significance",
+    "description": "List diseases or conditions resulting from gene mutations or protein deficiencies/excesses in the Clinical Significance section.",
+    "applicable_sections": [
+      "Clinical Significance"
+    ]
+  },
+  {
+    "name": "Attribute Discoveries in History/Discovery",
+    "description": "Attribute key discoveries concerning the gene or protein to the relevant individuals or groups in the History/Discovery section.",
+    "applicable_sections": [
+      "History/Discovery"
+    ]
+  },
+  {
+    "name": "Linking to Wikidata Item",
+    "description": "The Wikipedia article should be linked to a Wikidata item of the entity first mentioned in the first sentence of the lead section.",
+    "applicable_sections": [
+      "Lead"
+    ]
+  },
+  {
+    "name": "Wikidata Item for First Mentioned Entity",
+    "description": "The Wikipedia article should be linked to a Wikidata item of the entity mentioned in the first sentence of the lead section.",
+    "applicable_sections": [
+      "Lead"
+    ]
+  },
+  {
+    "name": "Use Reliable Sources",
+    "description": "Ensure that all sources cited are reliable and trustworthy. Refer to Wikipedia guidelines for identifying reliable sources in natural sciences and physical sciences, mathematics, and medicine.",
+    "applicable_sections": [
+      "All Sections"
+    ]
+  },
+  {
+    "name": "Provide Inline Citations",
+    "description": "Articles should contain dense inline citations using either footnotes or parenthetical citations to support statements. Avoid adding textbooks as general references without specific citations.",
+    "applicable_sections": [
+      "All Sections"
+    ]
+  },
+  {
+    "name": "Maintain Consistent Citation Format",
+    "description": "While there is no standard citation format on Wikipedia, ensure consistency in citation format within each article. Editors can format citations manually or use citation templates for control and presentation.",
+    "applicable_sections": [
+      "All Sections"
+    ]
+  },
+  {
+    "name": "Include Hyperlinks in Citations",
+    "description": "Supply hyperlinks in citations where applicable, such as linking to journal abstracts on PubMed, using DOI templates, and linking to freely available full-text articles online. Prefer HTML links over PDF when both are available.",
+    "applicable_sections": [
+      "All Sections"
+    ]
+  },
+  {
+    "name": "Include Navigation Boxes for Related Proteins",
+    "description": "Articles about related proteins should include one or more navigation boxes to cross link them appropriately. Examples of navigation boxes may include Cytoskeletal Proteins, Ion channels, Transcription factors, and Transmembrane receptors.",
+    "applicable_sections": [
+      "Navigation Box"
+    ]
+  },
+  {
+    "name": "Categorization Requirement",
+    "description": "Every Wikipedia article should be added to at least one category. Specific categories or subcategories that may be appropriate for gene and protein articles are provided, including Proteins, Enzymes by function, and Genes by human chromosome.",
+    "applicable_sections": [
+      "All Sections",
+      "Categories"
+    ]
+  },
+  {
+    "name": "Consistent Formatting of Notes",
+    "description": "Maintain a consistent and clear formatting style for notes throughout the article to enhance readability and coherence.",
+    "applicable_sections": [
+      "All Sections"
+    ]
+  }
+]
