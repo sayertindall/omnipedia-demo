@@ -96,11 +96,19 @@ class EvaluatedSection(BaseModel):
     section: str  # Section identifier or title
     score: float  # Score from 0 to 1 indicating adherence to the style guide
     feedback: str  # Feedback on the section
-    adherent_requirements: List[str]  # List of requirements the section adheres to
-    templates: List[str] = Field(default_factory=list)  # Templates used in the section
-    wikilinks: List[str] = Field(default_factory=list)  # Internal wiki links
-    external_links: List[str] = Field(default_factory=list)  # External links
-    list_items: List[str] = Field(default_factory=list)  # List items in the section
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert the EvaluatedSection instance to a dictionary.
+
+        Returns:
+            Dict[str, Any]: A dictionary representation of the EvaluatedSection.
+        """
+        return {
+            "section": self.section,
+            "score": self.score,
+            "feedback": self.feedback
+        }
 
 # Initialize logging
 logging.basicConfig(
@@ -643,6 +651,15 @@ async def main():
             print(f"Score: {section.score}")
             print(f"Feedback: {section.feedback}")
             print("---")
+        
+        # Convert EvaluatedSection objects to dictionaries
+        serializable_sections = [section.to_dict() for section in evaluated_sections]
+        
+        # Save the serializable sections to JSON
+        with open("evaluated_sections.json", 'w') as file:
+            json.dump(serializable_sections, file, indent=2)
+
+        print("Evaluation results saved to evaluated_sections.json")
 
     except Exception as e:
         logger.error(f"An error occurred in main: {e}", exc_info=True)

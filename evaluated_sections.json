@@ -1,0 +1,42 @@
+[
+  {
+    "section": "root",
+    "score": 0.6,
+    "feedback": "The section has a score of 0.6 due to partial adherence to the style guide requirements. The following requirements were adhered to:\n1. Avoid Hype in Study Descriptions\n2. Use UniProt Protein Name as Article Name\n3. Use Protein Acronym or HUGO Gene Symbol for Verbose Protein Names\n4. Include Taxon in Article Title for Viral Proteins\n5. Include Navigation Boxes for Related Proteins\n6. Use of Notes Section\n\nThe section could be improved by ensuring adherence to the remaining requirements."
+  },
+  {
+    "section": "section_1",
+    "score": 0.6,
+    "feedback": "The section adheres to most of the style guide requirements, but there are areas for improvement. It follows the guidelines for avoiding hype in study descriptions, using UniProt protein name, using verbose protein names, and enumerating proteins in a family. However, it does not include the taxon in the article title for viral proteins, which is a requirement. Additionally, there are opportunities to improve abbreviation and gene symbol usage for better adherence to the style guide."
+  },
+  {
+    "section": "section_2",
+    "score": 0.6,
+    "feedback": "The section partially adheres to the style guide requirements. It successfully avoids hype in study descriptions, uses the UniProt protein name as the article name, and includes the abbreviation BMPR2 for the gene. However, there are opportunities for improvement in naming proteins in a family with a dash and Arabic number, and including the taxon in the article title for clarity when discussing proteins associated with diseases."
+  },
+  {
+    "section": "section_3",
+    "score": 0.6,
+    "feedback": "The section mostly adheres to the style guide requirements. The content provides a detailed description of the BMPR2 protein structure and its variations. However, there are minor issues with abbreviation usage and gene symbol formatting. Ensure consistency in abbreviations and gene symbol presentation for improved adherence to the style guide."
+  },
+  {
+    "section": "section_4",
+    "score": 0.8,
+    "feedback": "The section adheres to most of the style guide requirements. The score is high due to the accurate information provided about the function of the BMPR2 gene and its interactions. However, there are minor issues like not using UniProt protein name as the article name and missing enumeration of proteins in a family."
+  },
+  {
+    "section": "section_5",
+    "score": 0.6,
+    "feedback": "The section on Clinical Significance partially adheres to the style guide requirements. The content is informative and relevant, but there are improvements needed in terms of avoiding hype in study descriptions and using UniProt protein names. The section could be enhanced by incorporating protein acronyms or HUGO gene symbols for verbose protein names and enumerating proteins in a family with Arabic numbers. Additionally, including infoboxes at the top of the article and utilizing gene abbreviations where appropriate would further improve adherence to the style guide."
+  },
+  {
+    "section": "section_6",
+    "score": 0.8,
+    "feedback": "The section on 'Interactions' adheres well to the style guide requirements. The content is informative and focused on the protein interactions without unnecessary hype. The protein names and acronyms are used appropriately, and the enumeration of proteins in families is clear. The section provides valuable information on interactions without repetition of basic information. The only minor suggestion for improvement would be to include hyperlinks in citations where applicable for wider compatibility."
+  },
+  {
+    "section": "section_7",
+    "score": 0.7,
+    "feedback": "The section scored 0.7 out of 1. The evaluation considers the following adherent requirements:\n1. Avoid Hype in Study Descriptions\n2. Use UniProt Protein Name as Article Name\n3. Use Protein Acronym or HUGO Gene Symbol for Verbose Protein Names\n4. Include Taxon in Article Title for Viral Proteins\n5. Use Reliable Sources\n6. Consistent Citation Formatting\n7. Hyperlinking in Citations"
+  }
+]
